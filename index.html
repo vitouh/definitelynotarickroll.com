@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Rickroll — Do Not Panic</title>
+  <style>
+    html,body{height:100%;margin:0}
+    body{background:#000;display:flex;align-items:center;justify-content:center;font-family:system-ui,Segoe UI,Roboto,"Helvetica Neue",Arial}
+    .player-wrap{width:90vw;max-width:960px;aspect-ratio:16/9;position:relative}
+    .player-wrap iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+    .overlay{
+      position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:auto;
+    }
+    .unmute-btn{
+      background:rgba(0,0,0,0.6);backdrop-filter:blur(4px);border:1px solid rgba(255,255,255,0.08);
+      color:#fff;padding:12px 18px;border-radius:999px;font-weight:600;cursor:pointer;font-size:16px
+    }
+    .visually-hidden{position:absolute!important;height:1px;width:1px;overflow:hidden;clip:rect(1px,1px,1px,1px);white-space:nowrap}
+  </style>
+</head>
+<body>
+  <main>
+    <div class="player-wrap" id="playerWrap">
+      <!-- initial iframe: autoplay muted so browsers allow it to start silently -->
+      <iframe id="rickIframe" src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&mute=1&controls=0&rel=0&modestbranding=1&playsinline=1" title="Rick Astley - Never Gonna Give You Up" allow="autoplay; fullscreen" allowfullscreen></iframe>
+
+      <!-- overlay with a button to enable sound (click required by browsers) -->
+      <div class="overlay" id="overlay">
+        <button class="unmute-btn" id="unmuteBtn">click to unmute (risky)</button>
+      </div>
+    </div>
+
+    <p class="visually-hidden">This page intentionally plays a music video in the center of a black background.</p>
+  </main>
+
+  <script>
+    // When the user clicks the button we reload the iframe without mute so the browser treats it as a user-initiated play.
+    const iframe = document.getElementById('rickIframe');
+    const btn = document.getElementById('unmuteBtn');
+    const overlay = document.getElementById('overlay');
+
+    btn.addEventListener('click', () => {
+      // replace src with unmuted autoplay. Because this is a direct user gesture, the browser will allow sound.
+      const unmutedSrc = 'https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&mute=0&controls=0&rel=0&modestbranding=1&playsinline=1';
+      iframe.src = unmutedSrc;
+      // remove the overlay once clicked
+      overlay.style.display = 'none';
+    });
+
+    // Optional: hide overlay after a short time if autoplay started and user doesn't care
+    // (keeps the simple "just plays" vibe but still lets user unmute)
+    setTimeout(() => {
+      // if the overlay is still visible after 4 seconds, keep it visible — user may want sound
+      // we'll not auto-dismiss to respect the click requirement for unmuting
+    }, 4000);
+
+    // keyboard accessibility: pressing space or enter on the focused button triggers click
+    btn.addEventListener('keydown', (e) => {
+      if (e.key === ' ' || e.key === 'Enter') {
+        e.preventDefault();
+        btn.click();
+      }
+    });
+  </script>
+</body>
+</html>
