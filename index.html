@@ -12,7 +12,7 @@
     .overlay{
       position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:auto;
     }
-    .unmute-btn{
+    .play-btn{
       background:rgba(0,0,0,0.6);backdrop-filter:blur(4px);border:1px solid rgba(255,255,255,0.08);
       color:#fff;padding:12px 18px;border-radius:999px;font-weight:600;cursor:pointer;font-size:16px
     }
@@ -23,11 +23,11 @@
   <main>
     <div class="player-wrap" id="playerWrap">
       <!-- initial iframe: autoplay muted so browsers allow it to start silently -->
-      <iframe id="rickIframe" src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&mute=1&controls=0&rel=0&modestbranding=1&playsinline=1" title="Rick Astley - Never Gonna Give You Up" allow="autoplay; fullscreen" allowfullscreen></iframe>
+      <video id="rickVid" src="video.mp4" autoplay muted playsinline loop style="width:100%;height:100%;object-fit:cover;"></video>
 
       <!-- overlay with a button to enable sound (click required by browsers) -->
       <div class="overlay" id="overlay">
-        <button class="unmute-btn" id="unmuteBtn">click to unmute (risky)</button>
+        <button class="unmute-btn" id="unmuteBtn">play</button>
       </div>
     </div>
 
@@ -41,11 +41,10 @@
     const overlay = document.getElementById('overlay');
 
     btn.addEventListener('click', () => {
-      // replace src with unmuted autoplay. Because this is a direct user gesture, the browser will allow sound.
-      const unmutedSrc = 'https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&mute=0&controls=0&rel=0&modestbranding=1&playsinline=1';
-      iframe.src = unmutedSrc;
-      // remove the overlay once clicked
-      overlay.style.display = 'none';
+      // play video with user gesture
+theVid = document.getElementById('rickVid');
+theVid.play();
+overlay.style.display = 'none';
     });
 
     // Optional: hide overlay after a short time if autoplay started and user doesn't care
